@@ -46,42 +46,15 @@ var App = {
 
 
 App.index = [
-  
-  // all animations auto start, auto add, auto restart after xx seconds
-
-  // We are going to look at how simple rules can make complex things
-
   ['testpattern', 'Test Pattern'],
-  //['emergence', 'Emergence'],
   ['make_planet', 'Make Planet'],
-  
-
-  // ['rules_of_ships', 'Rules of Ships'], // Show single ship. JS object illustrate params
-  // //['ship_behaviour', 'Make the ship behave'], // Chase, run, laser, missile
-  // ['fighting_ships', 'Fighting Ships'], // in the orbiting planets
-
-  // planet, orbit and outer system ownership??
-  // Ships have a motivation to comquer, colonize or trade
-  // colonization
-  // Lets make some space
- 
-  ['make_system', 'Make a System'],
+  ['make_system', 'Make System'],
   ['make_ships', 'Make Ships'],
   ['make_fight', 'Make Fight'],
-  ['make_colonies', 'Make Colonies'], // colonize! one empire
-  ['make_war', 'Make War'], // colonize! two empires
-  ['make_empires', 'Make Empires'], // take over the stars
-
-  // //['make_stars', 'Make Stars'], 
-  // // random starfield. Auto zoom, pan (pick system at random, easing), different density on randomisation; explain spacing algorithm. 'next' key zooms in to a star as lead in to next slide
-  
-  // ['make_universe', 'Make A Univese'] // big starfield zooming in/out
-  // // of random stars, almost looking
-  // // like Life (fake zooming in to systems)
-
-// how to run serverside and across multiple machines (theory and challenge)
+  ['make_colonies', 'Make Colonies'],
+  ['make_war', 'Make War'],
+  ['make_empires', 'Make Empires'],
 ];
-
 
 App.Router = Backbone.Router.extend ({
   routes: {
