@@ -5,7 +5,6 @@ var _ = require('underscore');
 var async = require('async');
 var Hapi = require('hapi');
 var Path = require('path');
-var Ws = require('ws');
 
 module.exports = function(config){
 
@@ -44,42 +43,6 @@ module.exports = function(config){
     config.server.port,
     serverOptions
   );
-
-  var ws = new Ws.Server({
-    server: server.listener
-  });
-
-  var wsClients = [];
-
-  ws.on('connection', function (socket) {
-
-    // emit api messages to client here:
-
-    // // send events to socket
-    // var handler = function(method, id, args){
-    //   console.log('>>>', [method, id, args]);
-    //   socket.send(JSON.stringify([method, id, args]));
-    // };
-    // var listener = api.listener(handler);
-
-    socket.on('close', function (message) {
-      //listener.quit();
-    });
-
-    // receive commands from socket
-    socket.on('message', function (message) {
-      var args;
-      try{
-        args = JSON.parse(message);
-      } catch(e){
-        console.log('SOCKER PARSE ERROR', e);
-        return;
-      }
-      console.log('ws got:', args);
-    });
-
-  });
-
 
   // fake asset bundling
 
