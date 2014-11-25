@@ -8,7 +8,7 @@ App.Views.make_planet = Backbone.View.extend({
   initialize : function(opts) {
     _.bindAll(this, 'onClose', 'render', 'start', 'stop', 'draw', 'tick');
     this.render();
-    $(window).on('resize', this.render);
+    //$(window).on('resize', this.render);
   },
   onClose: function(){
     $(window).off('resize', this.render);
@@ -42,12 +42,253 @@ App.Views.make_planet = Backbone.View.extend({
     var xw = this.w/16;
     var xh = this.h/16;
 
+
+
+    ctx.save();
+    ctx.translate(this.w/2, this.h - xh);
+    var pctx = ((this.planet.get('cr')/this.planet.get('shipcost'))*100).toFixed(0);
+
+    ctx.fillStyle = 'rgba(255,255,255, 0.2);';
+    ctx.fillRect(-50, 0, 100, 8);
+    //ctx.fillText(0, yy*1, 20, 20);
+
+      ctx.fillStyle = 'rgba(0,255,255, 0.5);';
+      ctx.fillRect(0 - pctx/2, 0, pctx, 8);
+    //ctx.fillText(0, yy*1, 20, 20);
+      ctx.restore();
+
+    // draw spawned ships
+
+    var draw_ships = function(){
+      var z = xw / 8;
+      //var z = 2 * xw;
+      self.planet.ships.each(function(ship, ix){
+        if(ix > 5){
+          return;
+        }
+        //draw ship body
+        ctx.save();
+        ctx.scale(1.8, 1.8);
+        ctx.translate(self.w * 0.1, self.h * 0.43);
+
+        ctxfx.save();
+        ctxfx.scale(1.8, 1.8);
+        ctxfx.translate((self.w * 0.1) + (z * ix) , self.h * 0.43);
+
+        ctx.lineWidth = z/2;
+        ctx.fillStyle = '#fff';
+        ctx.strokeStyle = '#fff';
+        ctx.beginPath();
+
+        ctx.moveTo(0, -1.5*z);
+        ctx.lineTo(z, z);
+        ctx.lineTo(0, 0);
+        ctx.lineTo(-z, z);
+        ctx.lineTo(0, -1.5*z);
+
+        ctx.closePath();
+        ctx.stroke();
+        ctx.fill();
+
+
+        ctxfx.lineWidth = z/2;
+        ctxfx.fillStyle = '#fff';
+        ctxfx.strokeStyle = '#fff';
+        ctxfx.beginPath();
+
+        ctxfx.moveTo(0, -1.5*z);
+        ctxfx.lineTo(z, z);
+        ctxfx.lineTo(0, 0);
+        ctxfx.lineTo(-z, z);
+        ctxfx.lineTo(0, -1.5*z);
+
+        ctxfx.closePath();
+        ctxfx.stroke();
+        ctxfx.fill();
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 12pt Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(ship.get('pop'), 0, 3*z);
+
+        ctx.restore();
+        ctxfx.restore();
+      });
+    }();
+
+
     // draw here
+
+    var draw_flow =  function(){
+
+      var xw = self.w/10;
+      var xh = self.h/10;
+      var xx = Math.min(self.w, self.h)/10;
+
+      // draw here
+
+      // connections
+      _.each(self.obs, function(ob){
+        _.each(ob.to, function(to){
+          var x = self.w/2 + (ob.x * 3 * xx);
+          var y = self.h/2 + (ob.y * 3 * xx);
+
+          var to_x = self.w/2 + (self.obs[to].x * 3 * xx);
+          var to_y = self.h/2 + (self.obs[to].y * 3 * xx);
+          
+          var angle = 0;
+          var c = 0;
+
+          if(to_x < x){
+            x -= xx;
+            to_x += xx;
+            c ++;
+            angle -= 90
+          }
+
+          if(to_x > x){
+            x += xx;
+            to_x -= xx;
+            c ++;
+            angle += 90
+          }
+
+          if(to_y < y){
+            y -= xx;
+            to_y += xx;
+            c ++;
+            //angle += 0;
+          }
+
+          if(to_y > y){
+            y += xx;
+            to_y -= xx;
+            angle += 180
+            c ++;
+          }
+
+          ctx.lineWidth = xw/10;
+          ctx.strokeStyle = ob.color; 
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(to_x, to_y);
+          ctx.stroke()
+          ctx.closePath();     
+        });
+      });
+
+      // boxes
+      _.each(self.obs, function(ob){
+        var x = self.w/2 + (ob.x * 3 * xx);
+        var y = self.h/2 + (ob.y * 3 * xx);
+        ctx.save();
+        ctx.translate(x, y);
+
+        ctx.lineWidth = xw/10;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0 - xx, 0 - xx, 2 * xx, 2 * xx);
+        ctx.strokeStyle = ob.color;
+        ctx.strokeRect(0 - xx, 0 - xx, 2 * xx, 2 * xx);      
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 24pt Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(ob.title, 0, xx/3);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 24pt Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(ob.chinese, 0, -xx/3);
+
+        ctx.restore();
+
+      });
+
+
+      // arrow heads
+      _.each(self.obs, function(ob){
+        _.each(ob.to, function(to){
+
+          var x = self.w/2 + (ob.x * 3 * xx);
+          var y = self.h/2 + (ob.y * 3 * xx);
+
+          var to_x = self.w/2 + (self.obs[to].x * 3 * xx);
+          var to_y = self.h/2 + (self.obs[to].y * 3 * xx);
+          
+          var angle = 0;
+          var c = 0;
+
+          if(to_x < x){
+            x -= xx;
+            to_x += xx;
+            c ++;
+            angle -= 90
+          }
+
+          if(to_x > x){
+            x += xx;
+            to_x -= xx;
+            c ++;
+            angle += 90
+          }
+
+          if(to_y < y){
+            y -= xx;
+            to_y += xx;
+            c ++;
+            //angle += 0;
+          }
+
+          if(to_y > y){
+            y += xx;
+            to_y -= xx;
+            angle += 180
+            c ++;
+          }
+
+          angle = angle / c;
+          ctx.lineWidth = xw/10;
+
+          ctx.save();
+          ctx.translate(to_x, to_y);
+          ctx.rotate(de_ra(angle));
+          var z = xw/5;
+          ctx.beginPath(); 
+          ctx.strokeStyle = ob.color; 
+          ctx.moveTo(-z, z);
+          ctx.lineTo(0, 0);
+          ctx.lineTo(z, z);
+          ctx.stroke()
+          ctx.restore();
+
+
+        });
+
+      });
+      //
+    }();
+
+    // values
 
     var data = this.planet.toJSON();
     var radius = xh * 2;
-    data.x = Number(3*xw);
-    data.y = Number(3*xh);
+    // data.x = Number(this.w - 6*xh);
+    // data.y = Number(3.3*xh);
+    data.x = Number(this.w/2);
+    data.y = Number(this.h/2);
+
+    ctx.beginPath();
+    ctx.fillStyle = '#000';
+    ctx.fillRect(data.x - xw, data.y - radius * 1.2, 2 * xw, 2.4 * radius);
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.fillStyle = '#000';
+    ctx.fillRect(data.x - radius * 1.2, data.y - xw, 2.4 * radius, 2 * xw);
+    ctx.closePath();
+
     ctx.fillStyle = '#222';
     ctx.beginPath();
     ctx.arc(data.x, data.y, radius, 0, 2 * Math.PI, true);
@@ -61,7 +302,7 @@ App.Views.make_planet = Backbone.View.extend({
       agr: '#090'
     };
 
-    var oldAngle = 0;
+    var oldAngle = Math.PI * 1.15;
     _.each(segments, function(color, k){
       var val = data[k] / data.land;
       if(k === 'pol'){
@@ -86,7 +327,7 @@ App.Views.make_planet = Backbone.View.extend({
       cr: '#cc0'
     };
     var vals = [
-      'land',
+      //'land',
       'pop',
       // 'birthrate',
       // 'deathrate',
@@ -95,24 +336,60 @@ App.Views.make_planet = Backbone.View.extend({
       'pol',
       'cr'
     ];
+
+
+
     var xl = xw;
     var xr = 6*xw;
     var xp = 9*xw;
     var xd = this.w - (4*xw);
     var xo = this.w - (xw);
     var yy = 8*xh;
+    var yy = 8*xh;
 
+    
     ctx.font = '32pt arial';
-
     ctx.fillStyle = '#aaa';
     vals.forEach(function(k){
 
+      ctx.save();
+
+      ctx.textAlign = 'right';
+
+      switch(k){
+      case 'pop':
+        ctx.translate(420, 160);
+        ctx.textAlign = 'right';
+        break;
+
+      case 'agr':
+        ctx.translate(190, 390);
+        break;
+
+      case 'ind':
+        ctx.translate(420, 620);
+        break;
+
+      case 'pol':
+        ctx.translate(840, 390);
+        ctx.textAlign = 'left';
+        break;
+
+      case 'cr':
+        ctx.translate(820, 620);
+        break;
+
+      default:
+        break;
+
+      }
+      
       if(segments[k]){
         ctx.fillStyle = segments[k];
       }
 
-      ctx.textAlign = 'left';
-      ctx.fillText(k, xl, yy);
+      //ctx.textAlign = 'left';
+      //ctx.fillText(k, 0, yy);
 
       var val = data[k];
       if(k === 'pol'){
@@ -122,70 +399,81 @@ App.Views.make_planet = Backbone.View.extend({
       var pct = val / data.land * 100;
 
       var s;
+
+
+
+      if(data.hasOwnProperty('d_' + k)){
+        if(k === 'cr'){
+          ctx.fillText(data[k].toFixed(0) + ' Cr', 0, 0);
+        } else {
+          ctx.fillText(data[k].toFixed(0), 0, 0);
+        }
+      }
+      // actual value
+     
+
+
       // deltas
-      s = data['d_' + k]
-      if(!s){
-        s = 0;
-      } else {
-        s = s.toFixed(2);
-      }
 
-      if(data['d_' + k] === 0){
-        s = '-';
-      } else if(data['d_' + k] < 0){
-        s = '-' + s;
-      } else {
-        s = '+' + s;
-      }
 
-     if(data.hasOwnProperty('d_' + k)){
-        ctx.textAlign = 'right';
-        ctx.fillText(s, xd, yy);
-     }
+     //  s = data['d_' + k]
+     //  if(!s){
+     //    s = 0;
+     //  } else {
+     //    s = s.toFixed(0);
+     //  }
 
-     if(data.hasOwnProperty('d_' + k)){
-        ctx.textAlign = 'right';
-        ctx.fillText(s, xd, yy);
-      }
+     //  if(data['d_' + k] === 0){
+     //    s = '-';
+     //  } else if(data['d_' + k] < 0){
+     //    s = '-' + s;
+     //  } else {
+     //    s = '+' + s;
+     //  }
 
-      // outputs
-      s = data['out_' + k]
-      if(!s){
-        s = 0;
-      } else {
-        s = s.toFixed(0);
-      }
-      if(data['out_' + k] === 0){
-        s = '-';
-      } else if(data['out_' + k] < 0){
-        s = s;
-      }
+     // if(data.hasOwnProperty('d_' + k)){
+     //    ctx.fillText(s, 0, xh * 1);
+     // }
 
-     if(data.hasOwnProperty('d_' + k)){
-        ctx.textAlign = 'right';
-        ctx.fillText(s, xo, yy);
-      }
+     //  // outputs
+     //  s = data['out_' + k]
+     //  if(!s){
+     //    s = 0;
+     //  } else {
+     //    s = s.toFixed(0);
+     //  }
+     //  if(data['out_' + k] === 0){
+     //    s = '-';
+     //  } else if(data['out_' + k] < 0){
+     //    s = s;
+     //  }
 
-      ctx.textAlign = 'right';
-      if(k === 'cr'){
-        ctx.fillText(data[k].toFixed(2), xr, yy);
-      } else {
-        ctx.fillText(val.toFixed(2), xr, yy);
-        ctx.fillText(pct.toFixed(2) + '%', xp, yy);
-      }
-      yy += xh;
+     // if(data.hasOwnProperty('d_' + k)){
+     //   ctx.fillText(s, 0, xh * 1);
+     //  }
+
+
+
+      ctx.restore();
+
     });
+
 
     // chart
     var drawChart = function(){
       var chart = self.chart;
-      var w = xw*8;
-      var h = xh*4
+      var w = xw * 5;
+      var h = xh * 3.3
+      var max = Math.max(data.pop, data.pol, data.ind, data.agr);
+      var f;
+      //f = (h/max);
+      f = 250;
       ctx.save();
-      ctx.translate(xw*6, xh);
-      ctx.fillStyle = '#222';
+      ctx.translate(self.w - 5.5*xw, xh * 1.5);
+      //ctx.translate(xh*1.5, self.h - h - xh*1.5);
+      ctx.fillStyle = '#000';
       ctx.beginPath();
-      ctx.rect(0, 0, w,h);
+      ctx.rect(0, 0, w, h);
       ctx.fill();
 
       ctx.lineWidth = xw/16;
@@ -194,16 +482,18 @@ App.Views.make_planet = Backbone.View.extend({
         ctx.strokeStyle = segments[key];
         var xstep = w /  self.chartLimit;
         ctx.beginPath();
-        ctx.moveTo(0, h - (h * vals)[0]);
+        ctx.moveTo(0, h - (f * vals)[0]);
         vals.forEach(function(val, ix){
-          ctx.lineTo(1+ ix * xstep, h - (h * val));
+          //console.log((f * val));
+          ctx.lineTo(1 + ix * xstep, h - (f * val));
         });
         ctx.stroke();
         ctx.closePath();
       });
 
       ctx.beginPath();
-      ctx.strokeStyle = '#444';
+      ctx.strokeStyle = '#222';
+      ctx.lineWidth = xw/8;
       ctx.rect(0, 0, w,h);
       ctx.stroke();
 
@@ -212,6 +502,16 @@ App.Views.make_planet = Backbone.View.extend({
 
 
     //
+
+    var yy = this.h * 0.1;
+    //var yy = this.h * 0.65;
+    ctx.fillStyle = '#a3a';
+    ctx.font = 'bold 12pt courier';
+    ctx.textAlign = 'left';
+    _.each(this.rules, function(rule){
+      ctx.fillText(rule, xw/2, yy);
+      yy += xh/2;
+    });
 
     ctx.restore();
     ctxfx.restore();
@@ -229,6 +529,11 @@ App.Views.make_planet = Backbone.View.extend({
 
     // tick here
 
+    if(this.planet.spawned && this.planet.spawned.length > 0){
+      //console.log(this.planet.spawned);
+      //this.planet.spawned = [];
+    }
+
     var data = this.planet.toJSON();
     _.each(['pop','pol','agr','ind'], function(key){
       var val = data[key];
@@ -237,6 +542,7 @@ App.Views.make_planet = Backbone.View.extend({
       } else{
         // express as
         val = (val / data.land);
+        //val = (val);
       }
       self.chart[key].push(val);
       while(self.chart[key].length > self.chartLimit+1){
@@ -261,9 +567,77 @@ App.Views.make_planet = Backbone.View.extend({
       ind: []
     };
 
-    this.planet = new App.Models.Planet({name: 'Test Planet'});
-    this.period = 50;
+    this.obs = {
+      pop: {
+        x: 0,
+        y: -1,
+        title: 'POP',
+        chinese: '人口',
+        color: '#fff',
+        to: ['ind']
+      },
+      agr: {
+        x: -1,
+        y: 0,
+        title: 'AGR',
+        chinese: '农业',
+        color: '#090',
+        to: ['pop']
+      },
+      // raw: {
+      //   x: 0,
+      //   y: -1,
+      //   title: 'Raw',
+      //   color: '#B8860B',
+      //   to: ['pop', 'ind']
+      // },
+      ind: {
+        x: 0,
+        y: 1,
+        title: 'IND',
+        chinese: '行业',
+        color: '#0cc',
+        to: ['pol','agr']
+      },
+      pol: {
+        x: 1,
+        y: 0,
+        title: 'POL',
+        chinese: '污染',
+        color: '#c00',
+        to: ['pop','agr']
+      }
+      
+    };
 
+    this.rules = [
+      'POP IND AGR POL :: SIZ',
+      'POP IND AGR <|ups|',
+      'POP :: AGR',
+      'IND.out ~ POP',
+      'IND :> POL',
+      'POL :~> ups|pop agr|',
+      'IND %+> AGR',
+      'IND gen Ships',
+      'Ship takes POP',
+    ];
+
+    this.planet = new App.Models.Planet({
+      name: 'Test Planet',
+      fake_empire: true
+    });
+
+
+    this.empire = new App.Models.Empire({
+      name: 'Meat Eaters',
+      color: '#c0c'
+    });
+
+    this.empire.addPlanet(this.planet);
+    this.planet.empire = this.empire;
+
+
+    this.period = 50;
   },
   start: function () {
     this.init();
@@ -293,7 +667,6 @@ App.Views.make_planet = Backbone.View.extend({
     this.y = (this.ch / 2) - ((this.h * this.scale)/2);
   },
   render : function(){
-    console.log('++');
     this.stop();
     this.$el.html(this.template());
     this.$('.canvas').html('<canvas id="canvas"></canvas>');
