@@ -110,7 +110,8 @@ module.exports = function(config){
   var appHandler = function (request, reply) {
     reply.view('app', {
       js: js,
-      css: css
+      css: css,
+      ga: config.ga || ''    
     });
   };
  

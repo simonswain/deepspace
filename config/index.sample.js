@@ -15,6 +15,7 @@ module.exports = function(env){
   return {
     nickname: nickname,
     env: env,
+    ga: '',
     server: server
   };
 
