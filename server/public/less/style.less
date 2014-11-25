@@ -1,0 +1,135 @@
+body {
+    background: #000;
+    scroll-:y none;
+    overflow:hidden;
+    font-family:arial;
+}
+
+#app {
+
+    overflow:hidden;
+
+    h1 {
+        color: #fff;
+    }
+
+    .nav {
+        position: relative;
+        display: none;
+        h1 {
+            text-align: center;
+            padding: 20px 0 0 0;
+        }
+
+        h2 {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            text-align: right;
+            padding: 20px;
+            color: #fff;
+        }
+
+    }
+
+    .view {
+        top: 0;
+
+        &.view-default {
+            h1 {
+                font-size: 48pt;
+                color: #0ff;
+            }
+
+            ul {
+                list-style: none;
+                line-height: 140%;
+                text-align: center;
+                li {
+                    display: inline-block;
+                    margin: 8px;
+                    a {
+                        display: block;
+                        padding: 8px;
+                        background: #000;
+                        color: #999;
+                        font-weight: bold;
+                        border: 1px solid rgba(255, 0, 255, 0.2);
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    background: #000;
+    color: #fff;
+    font-size: 24pt;
+    a {
+        color: #fff;
+    }
+
+    .home {
+        z-index: 100;
+        position: absolute;
+
+        border-radius: 10%;
+
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .keys {
+            font-family: monospace;
+            font-size: 24pt;
+            text-align: center;
+            padding: 16px;
+            color: #0ff;
+        }
+
+        background: rgba(0, 0, 0, 0.2);
+        max-width: 1024px;
+        margin: 0 auto;
+
+        .toc {
+            color: #000;
+            font-size: 14pt;
+            a {
+                text-decoration: none;
+                &:hover {
+                    background: #111;
+                }
+                color: #369;
+                &.available{
+                    color: #ddd;
+                }
+            }
+        }
+    }
+
+    .canvas {
+        cursor: none;
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        bottom: 16px;
+        right: 16px;
+        z-index: 30;
+    }
+
+    .fx {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        bottom: 16px;
+        right: 16px;
+        z-index: 10;
+    }
+
+}

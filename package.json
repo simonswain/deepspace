@@ -1,0 +1,38 @@
+{
+  "name": "deepspace",
+  "description": "",
+  "version": "0.0.1",
+  "homepage": "",
+  "author": {
+    "name": "Simon Swain",
+    "email": "simon@simonswain.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "main": "lib/index.js",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "grunt test",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "grunt": "^0.4.5",
+    "handlebars": "^2.0.0",
+    "hapi": "^6.9.0",
+    "hapi-less": "^0.1.1",
+    "underscore": "^1.7.0",
+    "winston": "^0.7.3"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-nodeunit": "^0.4.1",
+    "nodeunit": "^0.9.0",
+    "nodeunit-httpclient": "^0.2.1"
+  }
+}

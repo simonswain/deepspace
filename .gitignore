@@ -1,0 +1,4 @@
+node_modules
+server/public/vendor
+/config/index.js
+/npm-debug.log
