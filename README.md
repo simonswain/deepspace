@@ -1,5 +1,17 @@
 # Deep Space
 
+Deep Space is a science fiction simulation.
+
+It creates stars, planets, economies, empires and spaceships.
+
+Ships leave their home planet, colonise ungoverned words and spread
+their empires as far as possible.
+
+Deep Space was first presented at JSConf.asia 2014. It is a study in
+physics, economics and emergent behaviour. Scientific accuracy is
+sacrificed to make an interesting sim.
+
+You can see a demo in operation at [http://simonswain.com/deepspace](http://simonswain.com/deepspace).
 
 ## Install
 
@@ -58,6 +70,16 @@ Create a star system and two operational empires that fight for dominance.
 Create a Sector and multiple competing empires.
 
 
+## Reading and Viewing
+
+* Traveller (science fiction adventure in the far future)
+* Ian M Banks Culture novels
+* Red Mars, Green Mars, Blue Mars
+* Atari vector games (Major Havoc, Tempest)
+* Williams arcade games (Defender, Robotron, Joust)
+* Tron (1992)
+* Wargames (1983)
+* Starship Troopers (1997)
 
 ## History
 
